@@ -5,27 +5,47 @@
 
 import java.util.*;
 
-class Pair {
+class Cell {
 	private int parent_i, parent_j;
 	double f, g, h;
 }
 
-// to check if the current cell is valid cell in the grid
-// return boolean false if it is not, and true if it is.
-boolean isValid(int row, int column, int RMAX, int CMAX) {
-	return (row >= 0) && (row < RMAX) &&
-			(col >= 0) && (col < CMAX);
-}
+// Generic Type Class Pair to store two values
+class Pair <T, E> {
+	public T first;
+	public E second;
 
-// to check if the destination has been reached or not
-// return a boolean true or false
-boolean isDestination(int row, int col, Pair <Integer, Integer> dest) {
-	if (row == )
+	Pair(T first, E second) {
+		this.first = first;
+		this.second = second;
+	}
+
+	// Default Constructor 
+	Pair() {
+		
+	}
 }
 
 public class ASearch {
-	public static final Pair <Integer, Integer> pair;
-	public static final Pair <Double, <Integer, Integer>> pPair;
+	// to check if the current cell is valid cell in the grid
+	// return boolean false if it is not, and true if it is.
+	public static boolean isValid(int row, int column, int RMAX, int CMAX) {
+		//boolean toReturn = false;
+		//if ( (row >=0) && (rwo < RMAX) && (col >= 0) && (col < CMAX) );
+		return (row >= 0) && (row < RMAX) &&
+				(column >= 0) && (column < CMAX);
+		//return toReturn;
+	}
+	
+	// to check if the destination has been reached or not
+	// return a boolean true or false
+	public static boolean isDestination(int row, int col, Pair <Integer, Integer> dest) {
+		if (row == dest.first && col == dest.second) return true;
+		else return false;
+	}
+	
+	public static final Pair <Integer, Integer> pair = new Pair <Integer, Integer>();
+	//public static final Pair <Double, <Integer, Integer>> pPair;
 	public static void main(String [] args) {
 		Scanner input = new Scanner(System.in);
 		System.out.println("Enter the Size of the GRID , M X N ");
