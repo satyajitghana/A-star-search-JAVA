@@ -29,6 +29,8 @@ class Cell {
 		this.g = g;
 		this.h = j;
 	}
+
+	//public Cell()
 }
 
 class AStarData {
@@ -43,7 +45,8 @@ class AStarData {
 }
 
 // Generic Type Class Pair to store two values
-class Pair <T, E> {
+//class Pair <T, E> implements Serializable {
+class Pair <T extends Comparable <? super T>, E extends Comparable < ? super E>> implements Comparable <Pair <T, E>> {
 	public T first;
 	public E second;
 
@@ -55,6 +58,31 @@ class Pair <T, E> {
 	// Default Constructor 
 	Pair() {
 		
+	}
+
+	@Override
+	public String toString() {
+		return first + " " + second;
+	}
+
+	@Override
+	public int hashCode() {
+		return first.hashCode() * 13 + (second == null ? 0 : second.hashCode());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Pair) {
+			Pair pair = (Pair) o;
+			if (first != null ? !first.equals(pair.second) : pair.first != null) return false;
+			if (second != null ? !second.equals(pair.second) : pair.second != null) return false;
+		}
+		return false;
+	}
+
+	public int compareTo(Pair <T, E> pair) {
+		int result = first.compareTo(pair.first);
+		return (result == 0) ? second.compareTo(pair.second) : result;
 	}
 }
 
@@ -103,7 +131,7 @@ public class ASearch {
 		return;
 	}
 	
-	public static void AStartSearch(boolean grid[][], Pair <Integer, Integer> src, Pair <Integer, Integer> dest) {
+	public static void AStarSearch(boolean grid[][], Pair <Integer, Integer> src, Pair <Integer, Integer> dest) {
 		// Check if the source is reachable
 		if (isValid(src.first, src.second, grid.length, grid[0].length) == false) {
 			System.out.println("Source is invalid");
@@ -137,10 +165,13 @@ public class ASearch {
 		int i, j;
 		for (i = 0 ; i < cellDetails.length ; i++) {
 			for (j = 0 ; j < cellDetails[0].length ; j++) {
-			/*	cellDetails[i][j].f = Float.MAX_VALUE;
+				/*cellDetails[i][j].f = Float.MAX_VALUE;
 				cellDetails[i][j].g = Float.MAX_VALUE;
-				cellDetails[i][j].h = Float.MAX_VALUE;	*/
-				cellDetails[i][j].setValue(-1,-1,Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+				cellDetails[i][j].h = Float.MAX_VALUE;
+				cellDetails[i][j].parent_i = i;
+				cellDetails[i][j].parent_j = j;*/
+				cellDetails[i][j] = new Cell(-1, -1, Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+				//cellDetails[i][j].setValue(-1,-1,Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
 			}
 		}
 		i = src.first; j = src.second;
@@ -334,23 +365,23 @@ if (foundDest == false)
 				currSuccessor.destFound = true;
 				return currSuccessor;
 			}
-		}
+		//}
 
-		else if (closedList[i][j] == false && grid[i][j] == true) {
-			currSuccessor.newCell.g = cellDetails[parent_i][parent_j].g;
-			if (isDiagonal) currSuccessor.newCell.g += 1.414;
-			else currSuccessor.newCell.g += 1.0;
-			currSuccessor.newCell.h = calculateHValue(i, j , dest);
-			currSuccessor.newCell.f = currSuccessor.newCell.g + currSuccessor.newCell.h;
-
-			if (cellDetails[i][j].f == Float.MAX_VALUE || cellDetails[i][j].f > currSuccessor.newCell.f) {
-				currSuccessor.newCell.parent_i = parent_i;
-				currSuccessor.newCell.parent_j = parent_j;
-				currSuccessor.addToSet = true;
-				return currSuccessor;
+			else if (closedList[i][j] == false && grid[i][j] == true) {
+				currSuccessor.newCell.g = cellDetails[parent_i][parent_j].g;
+				if (isDiagonal) currSuccessor.newCell.g += 1.414;
+				else currSuccessor.newCell.g += 1.0;
+				currSuccessor.newCell.h = calculateHValue(i, j , dest);
+				currSuccessor.newCell.f = currSuccessor.newCell.g + currSuccessor.newCell.h;
+	
+				if (cellDetails[i][j].f == Float.MAX_VALUE || cellDetails[i][j].f > currSuccessor.newCell.f) {
+					currSuccessor.newCell.parent_i = parent_i;
+					currSuccessor.newCell.parent_j = parent_j;
+					currSuccessor.addToSet = true;
+					return currSuccessor;
+				}
 			}
 		}
-
 		return currSuccessor;
 	}
 
@@ -370,5 +401,15 @@ if (foundDest == false)
 		}
 		for (boolean []t : grid)
 			System.out.println(Arrays.toString(t));
+		int src_i, src_j, dest_i, dest_j;
+		System.out.println("Enter the coordinates of the source : ");
+		src_i = input.nextInt(); src_j = input.nextInt();
+		System.out.println("Enter the coordinates of the destination : ");
+		dest_i = input.nextInt(); dest_j = input.nextInt();
+
+		Pair <Integer, Integer> src = new Pair <Integer, Integer>(src_i, src_j);
+		Pair <Integer, Integer> dest = new Pair <Integer, Integer>(dest_i, dest_j);
+		
+		AStarSearch(grid, src, dest);
 	}
 }
