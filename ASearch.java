@@ -360,12 +360,10 @@ if (foundDest == false)
 			if (isDestination(i, j, dest)) {
 				cellDetails[i][j].parent_i = parent_i;
 				cellDetails[i][j].parent_j = parent_j;
-				System.out.println("The destination is found");
 				currSuccessor.cellDetails = cellDetails;
 				currSuccessor.destFound = true;
 				return currSuccessor;
 			}
-		//}
 
 			else if (closedList[i][j] == false && grid[i][j] == true) {
 				currSuccessor.newCell.g = cellDetails[parent_i][parent_j].g;
